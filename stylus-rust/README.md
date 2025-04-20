@@ -1,4 +1,15 @@
-![Image](./header.png)
+here is the deploed contract address
+0x810e79de0f488c1a34d4b056ccaef2ee187cea06
+here is the abi for it;
+pragma solidity ^0.8.23;
+
+interface IEruptionScore  {
+    function addScore(address user, uint256 score) external;
+
+    function updateScore(address user, uint256 new_score) external;
+
+    function getScore(address user) external view returns (uint256);
+}
 
 # Stylus Hello World
 
