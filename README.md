@@ -1,6 +1,6 @@
-# 🤖 CoreNexus Twitter AI Agent
+# 🤖 CoreCensyx Twitter AI Agent
 
-CoreNexus is a **Web3-native AI Twitter bot** that analyzes Ethereum wallet addresses found in tweets and responds with an on-chain reputation score and legitimacy summary. It leverages **Arbitrum Stylus (Rust)** smart contracts for storing verified scores and utilizes **GoogleGemini** for natural language explanations.
+CoreCensyx is a **Web3-native AI Twitter bot** that analyzes Ethereum wallet addresses found in tweets and responds with an on-chain reputation score and legitimacy summary. It leverages **Arbitrum Stylus (Rust)** smart contracts for storing verified scores and utilizes **GoogleGemini** for natural language explanations.
 
 ---
 
