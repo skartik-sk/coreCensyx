@@ -33,7 +33,7 @@ const Index = () => {
               
               <Link to="/dashboard">
                 <Button variant="outline" size="lg" className="rounded-full px-8 py-6 text-lg border-2">
-                  View Demo <ArrowRight className="ml-2 h-5 w-5" />
+                  View Dashboard <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>

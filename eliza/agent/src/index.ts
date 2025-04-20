@@ -1,5 +1,5 @@
 import { DirectClient } from "@elizaos/client-direct";
-
+// import {twitterPlugin} from '@elizaos/'
 
 import {
     type Adapter,
@@ -635,6 +635,7 @@ export async function createAgent(
         // character.plugins are handled when clients are added
         plugins: [
             // bootstrapPlugin,
+
         ]
             .flat()
             .filter(Boolean),

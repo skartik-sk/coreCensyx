@@ -9,9 +9,23 @@ import NavBar from "@/components/NavBar";
 import { toast } from "@/hooks/use-toast";
 import { useUser } from "@civic/auth-web3/react";
 import axios from "axios";
-
-
+import { ethers } from "ethers"
+declare global {
+  interface Window {
+    ethereum?: any
+  }
+}
 const apiKey = "82J5U48EUY9KNZ8HC29EPSGURQZ5TVT4IT";
+
+const abi = [
+ "function addScore(address user, uint256 score) external"
+,
+    "function updateScore(address user, uint256 new_score) external",
+
+    "function getScore(address user) external view returns (uint256)"
+]
+const contractAddress = "0x810e79de0f488c1a34d4b056ccaef2ee187cea06"
+
 
 async function getTransactions(address, apiKey) {
   const [normalTxs, internalTxs] = await Promise.all([
@@ -87,10 +101,28 @@ const Dashboard = () => {
         const { normal, internal } = await getTransactions(walletAddress, apiKey);
 
         console.log("🧠 Calculating reputation score...");
-        const result = calculateScore(normal, internal);
+        const result = await calculateScore(normal, internal);
 
         console.table(result);
         setChainData(result);
+        try {
+          const provider = new ethers.BrowserProvider(window.ethereum)
+          const signer = await provider.getSigner()
+          const contract = new ethers.Contract(contractAddress, abi, signer)
+          const res = await contract.addScore(walletAddress,Math.round(result.score))
+          console.log(res)
+          toast({
+            title: " You Score added!",
+            description: "Your score has been added to the blockchain.",
+          });
+
+          
+        } catch (error) {
+          toast({
+            title: " Error",
+            description: error,
+          });
+        } 
       } catch (error) {
         console.error("❌ Error:", error.message);
       }
