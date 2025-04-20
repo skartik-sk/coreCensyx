@@ -1,4 +1,4 @@
-/target
+*/target
 .env
 .DS_Store
 *.iml
@@ -11,3 +11,4 @@
 *.tar.gz
 *.tar
 
+privatekey.txt
