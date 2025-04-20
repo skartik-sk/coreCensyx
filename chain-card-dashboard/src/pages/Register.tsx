@@ -76,7 +76,7 @@ const Register = () => {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold">Create Your Account</h1>
             <p className="text-muted-foreground mt-2">
-              Join UnchainScore to access your crypto profile
+              Join coreCensyx to access your crypto profile
             </p>
           </div>
           

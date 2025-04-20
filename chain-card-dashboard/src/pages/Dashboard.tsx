@@ -62,9 +62,9 @@ function calculateScore(normal, internal) {
 
 
 function extractWalletAddress(text: string): string | null {
-    const walletRegex = /(0x[a-fA-F0-9]{40})/; // Regex for Ethereum wallet address
-    const match = text.match(walletRegex);
-    return match ? match[1] : null;
+  const walletRegex = /(0x[a-fA-F0-9]{40})/; // Regex for Ethereum wallet address
+  const match = text.match(walletRegex);
+  return match ? match[1] : null;
 }
 
 
@@ -85,20 +85,21 @@ const Dashboard = () => {
       try {
         console.log("📡 Fetching data from BaseScan...");
         const { normal, internal } = await getTransactions(walletAddress, apiKey);
-    
+
         console.log("🧠 Calculating reputation score...");
         const result = calculateScore(normal, internal);
-    
+
         console.table(result);
-      setChainData(result);
-    } catch (error) {
-      console.error("❌ Error:", error.message);
-    }}
+        setChainData(result);
+      } catch (error) {
+        console.error("❌ Error:", error.message);
+      }
+    }
     else {
       console.error("❌ Invalid wallet address");
     }
 
-    
+
   }
   console.log(user)
   useEffect(() => {
@@ -112,12 +113,12 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      
+
       <div className="container mx-auto pt-24 pb-16 px-4 md:px-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Your Dashboard</h1>
           <p className="text-muted-foreground mt-1">
-            View your crypto profile and UnchainScore
+            View your crypto profile and coreCensyx Score
           </p>
         </div>
 
@@ -143,115 +144,142 @@ const Dashboard = () => {
             </div>
           </form>
         </div>
-        
+
         {/* Dashboard grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* User Profile Card */}
           <div className="col-span-1">
-            <UserProfile user={user}  /> 
-           
+            <UserProfile user={user} />
+
           </div>
+
           
-          {/* Wallet Details Card */}
-          <div className="col-span-1">
-            <WalletCard wallet={walletAddress} />
-          </div>
+          {chaindata ? (
+            <>
+              {/* Wallet Details Card */}
+              <div className="col-span-1">
+                <WalletCard wallet={walletAddress} />
+              </div>
+
+              {/* UnchainScore Card */}
+              <div className="col-span-1">
+                <UnchainScore result={chaindata} />
+              </div>
+            </>
+          ) : (
+            <div className="col-span-1">
+              loading...
+            </div>
+          )}
           
-          {/* UnchainScore Card */}
-          <div className="col-span-1">
-            <UnchainScore result={chaindata} />
-          </div>
         </div>
-        
+
         {/* Activity Overview */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Activity Overview</h2>
-          <Card className="glass-card">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Activity Stats */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-medium mb-2">Recent Activity</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Your account has been active for {" "}
-                      <span className="font-medium text-foreground">47 days</span>
-                    </p>
-                  </div>
-                  
-                  <div className="bg-secondary/50 p-4 rounded-lg">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium">Transaction Volume</span>
-                      <span className="text-sm">High</span>
-                    </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div className="bg-crypto-blue h-2 rounded-full w-[85%]"></div>
-                    </div>
-                  </div>
+          {chaindata? (
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold mb-4">Activity Overview</h2>
+              <Card className="glass-card">
+                <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Activity Stats */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Recent Activity</h3>
+                  <p className="text-muted-foreground text-sm">
+              Your account has been active for {" "}
+              <span className="font-medium text-foreground">{chaindata.activeDays}</span>
+                  </p>
                 </div>
-                
-                {/* Security Score */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-medium mb-2">Security Rating</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Your account security is{" "}
-                      <span className="font-medium text-green-500">Good</span>
-                    </p>
+
+                <div className="bg-secondary/50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">Transaction Volume</span>
+              <span className="text-sm">
+                {chaindata.totalTxs > 50 ? 'High' : chaindata.totalTxs > 20 ? 'Medium' : 'Low'}
+              </span>
                   </div>
-                  
-                  <div className="bg-secondary/50 p-4 rounded-lg">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium">2FA Enabled</span>
-                      <span className="text-sm text-green-500">Yes</span>
-                    </div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium">Recovery Email</span>
-                      <span className="text-sm text-green-500">Set</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Last Login</span>
-                      <span className="text-sm">Just Now</span>
-                    </div>
+                  <div className="w-full bg-secondary rounded-full h-2">
+              <div
+                className="bg-crypto-blue h-2 rounded-full"
+                style={{
+                  width: `${Math.min((chaindata.totalTxs) / 50 * 100, 100)}%`
+                }}
+              ></div>
                   </div>
-                </div>
-                
-                {/* Recommendations */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-medium mb-2">Recommendations</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Ways to improve your UnchainScore
-                    </p>
-                  </div>
-                  
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
-                        <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
-                      </div>
-                      <span className="text-sm">Increase portfolio diversity</span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
-                        <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
-                      </div>
-                      <span className="text-sm">Complete your profile verification</span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
-                        <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
-                      </div>
-                      <span className="text-sm">Connect additional wallets</span>
-                    </li>
-                  </ul>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              {/* Security Score */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Security Rating</h3>
+                  <p className="text-muted-foreground text-sm">
+              Your account security is{" "}
+              <span className={`font-medium ${chaindata.failRatio < 0.1 ? 'text-green-500' : chaindata.failRatio < 0.3 ? 'text-yellow-500' : 'text-red-500'}`}>
+                {chaindata.failRatio < 0.1 ? 'Good' : chaindata.failRatio < 0.3 ? 'Fair' : 'Poor'}
+              </span>
+                  </p>
+                </div>
+
+                <div className="bg-secondary/50 p-4 rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">2FA Enabled</span>
+              <span className="text-sm text-green-500">Yes</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-1">
+              <span className="text-sm font-medium">Recovery Email</span>
+              <span className="text-sm text-green-500">Set</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Last Login</span>
+              <span className="text-sm">Just Now</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recommendations */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Recommendations</h3>
+                  <p className="text-muted-foreground text-sm">
+              Ways to improve your UnchainScore
+                  </p>
+                </div>
+
+                <ul className="space-y-2">
+                  {chaindata.totalTxs < 50 && (
+              <li className="flex items-start">
+                <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
+                </div>
+                <span className="text-sm">Increase transaction volume (current: {chaindata.totalTxs}/50)</span>
+              </li>
+                  )}
+                  {chaindata.activeDays < 30 && (
+              <li className="flex items-start">
+                <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
+                </div>
+                <span className="text-sm">Increase active days (current: {chaindata.activeDays}/30)</span>
+              </li>
+                  )}
+                  {Number(chaindata.failRatio) > 0.1 && (
+              <li className="flex items-start">
+                <div className="mr-2 mt-1 h-4 w-4 rounded-full bg-crypto-green/20 flex items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-crypto-green"></div>
+                </div>
+                <span className="text-sm">Reduce failed transactions (current ratio: {(Number(chaindata.failRatio) * 100).toFixed(1)}%)</span>
+              </li>
+                  )}
+                </ul>
+              </div>
+            </div>
+                </CardContent>
+              </Card>
+            </div>
+          ):<div>loading...</div>}
       </div>
-    </div>
+    </div >
   );
 };
 

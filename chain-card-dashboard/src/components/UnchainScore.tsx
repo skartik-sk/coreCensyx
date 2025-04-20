@@ -34,7 +34,7 @@ const UnchainScore = ({ result }: UnchainScoreProps) => {
     {result?
     <Card className="glass-card hover-lift">
       <CardHeader className="pb-2">
-        <h3 className="text-lg font-medium">Your UnchainScore</h3>
+        <h3 className="text-lg font-medium">Your coreCensyx Score</h3>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

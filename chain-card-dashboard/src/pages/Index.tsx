@@ -22,7 +22,7 @@ const Index = () => {
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Discover Your <span className="gradient-text">Crypto Profile</span> With UnchainScore
+              Discover Your <span className="gradient-text">Crypto Profile</span> With coreCensyx
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
               Track your wallet performance, view in-depth analytics, and see how your crypto activity ranks with our innovative scoring system.
@@ -70,7 +70,7 @@ const Index = () => {
               <div className="w-14 h-14 bg-crypto-purple/10 rounded-lg flex items-center justify-center mb-4">
                 <Check className="h-7 w-7 text-crypto-purple" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Unchain Score</h3>
+              <h3 className="text-xl font-semibold mb-3">coreCensyx Score</h3>
               <p className="text-gray-600">Get your personal crypto score based on activity, security, and portfolio diversity.</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ const Index = () => {
         </div>
         
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to discover your UnchainScore?</h2>
+          <h2 className="text-3xl font-bold mb-6">Ready to discover your coreCensyxScore?</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Join thousands of crypto enthusiasts who are already tracking their performance and improving their strategies.
           </p>
@@ -99,7 +99,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="py-8 bg-gray-50 border-t border-gray-200">
         <div className="container mx-auto px-6 text-center text-gray-600">
-          <p>© 2025 UnchainScore. All rights reserved.</p>
+          <p>© 2025 coreCensyx. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -24,7 +24,7 @@ const NavBar = () => {
           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-crypto-blue to-crypto-purple text-white flex items-center justify-center text-xl font-bold">
             U
           </div>
-          <span className="ml-2 font-semibold text-xl">UnchainScore</span>
+          <span className="ml-2 font-semibold text-xl">coreCensyx</span>
         </Link>
 
         {/* Desktop Navigation */}
