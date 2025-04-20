@@ -1,106 +1,67 @@
-//!
-//! Stylus Hello World
-//!
-//! The following contract implements the Counter example from Foundry.
-//!
-//! ```solidity
-//! contract Counter {
-//!     uint256 public number;
-//!     function setNumber(uint256 newNumber) public {
-//!         number = newNumber;
-//!     }
-//!     function increment() public {
-//!         number++;
-//!     }
-//! }
-//! ```
-//!
-//! The program is ABI-equivalent with Solidity, which means you can call it from both Solidity and Rust.
-//! To do this, run `cargo stylus export-abi`.
-//!
-//! Note: this code is a template-only and has not been audited.
-//!
-// Allow `cargo stylus export-abi` to generate a main function.
 #![cfg_attr(not(any(test, feature = "export-abi")), no_main)]
 extern crate alloc;
 
-/// Import items from the SDK. The prelude contains common traits and macros.
-use stylus_sdk::{alloy_primitives::U256, prelude::*};
+use stylus_sdk::{
+    alloy_primitives::{Address, U256},
+    prelude::*
 
-// Define some persistent storage using the Solidity ABI.
-// `Counter` will be the entrypoint.
+};
+
+
+/// Declare storage
 sol_storage! {
     #[entrypoint]
-    pub struct Counter {
-        uint256 number;
+    pub struct EruptionScore {
+        // Mapping from address => score
+        mapping(address => uint256) scores;
     }
 }
 
-/// Declare that `Counter` is a contract with the following external methods.
+/// Public functions available in the contract
 #[public]
-impl Counter {
-    /// Gets the number from storage.
-    pub fn number(&self) -> U256 {
-        self.number.get()
+impl EruptionScore {
+    /// Add score for a new address (only if it doesn't exist)
+    pub fn add_score(&mut self, user: Address, score: U256) {
+        let existing = self.scores.get(user);
+        assert!(existing == U256::ZERO, "Score already exists");
+        self.scores.insert(user, score);
     }
 
-    /// Sets a number in storage to a user-specified value.
-    pub fn set_number(&mut self, new_number: U256) {
-        self.number.set(new_number);
+    /// Update score for an address (only if already exists)
+    pub fn update_score(&mut self, user: Address, new_score: U256) {
+        let existing = self.scores.get(user);
+        assert!(existing != U256::ZERO, "Score not found");
+        self.scores.insert(user, new_score);
     }
 
-    /// Sets a number in storage to a user-specified value.
-    pub fn mul_number(&mut self, new_number: U256) {
-        self.number.set(new_number * self.number.get());
-    }
-
-    /// Sets a number in storage to a user-specified value.
-    pub fn add_number(&mut self, new_number: U256) {
-        self.number.set(new_number + self.number.get());
-    }
-
-    /// Increments `number` and updates its value in storage.
-    pub fn increment(&mut self) {
-        let number = self.number.get();
-        self.set_number(number + U256::from(1));
-    }
-
-    /// Adds the wei value from msg_value to the number in storage.
-    #[payable]
-    pub fn add_from_msg_value(&mut self) {
-        let number = self.number.get();
-        self.set_number(number + self.vm().msg_value());
+    /// Get score for an address
+    pub fn get_score(&self, user: Address) -> U256 {
+        self.scores.get(user)
     }
 }
+
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use stylus_sdk::testing::*;
 
     #[test]
-    fn test_counter() {
-        use stylus_sdk::testing::*;
+    fn test_eruption_score() {
         let vm = TestVM::default();
-        let mut contract = Counter::from(&vm);
+        let mut contract = EruptionScore::from(&vm);
 
-        assert_eq!(U256::ZERO, contract.number());
+        let user: Address = Address::from([0x11; 20]);
 
-        contract.increment();
-        assert_eq!(U256::from(1), contract.number());
+        // Initially zero
+        assert_eq!(contract.get_score(user), U256::ZERO);
 
-        contract.add_number(U256::from(3));
-        assert_eq!(U256::from(4), contract.number());
+        // Add score
+        contract.add_score(user, U256::from(10));
+        assert_eq!(contract.get_score(user), U256::from(10));
 
-        contract.mul_number(U256::from(2));
-        assert_eq!(U256::from(8), contract.number());
-
-        contract.set_number(U256::from(100));
-        assert_eq!(U256::from(100), contract.number());
-
-        // Override the msg value for future contract method invocations.
-        vm.set_value(U256::from(2));
-
-        contract.add_from_msg_value();
-        assert_eq!(U256::from(102), contract.number());
+        // Update score
+        contract.update_score(user, U256::from(42));
+        assert_eq!(contract.get_score(user), U256::from(42));
     }
 }
